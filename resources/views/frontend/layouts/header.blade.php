@@ -37,7 +37,10 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->is('contact-us') ? 'active' : '' }}" href="/contact-us">যোগাযোগ</a>
                 </li>
-                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('product') ? 'active' : '' }}" href="/product">পণ্য</a>
+                </li>
+
                 <li class="nav-item ms-lg-4 mt-3 mt-lg-0">
                     <a class="btn-fighter" href="/be-a-fighter-register">
                         <i class="bi bi-droplet-fill me-2"></i>দাতা হন

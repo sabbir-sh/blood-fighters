@@ -19,7 +19,10 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\DonorRegistationController;
+use App\Http\Controllers\Frontend\ProductsController;
+use App\Http\Controllers\Frontend\WishlistController;
 
 // Frontend
 
@@ -50,7 +53,21 @@ Route::post('/be-a-fighter-register', [DonorRegistationController::class, 'submi
 Route::get('/help-for-donate', [PaymentsController::class, 'index'])->name('donor.donation.index');
 Route::post('/help-for-donate/store', [PaymentsController::class, 'store'])->name('donor.donation.store');
 
+// Products
+Route::get('/product', [ProductsController::class, 'index'])
+    ->name('product.front.index');
 
+Route::get('/product/{slug}', [ProductsController::class, 'show'])
+    ->name('product.front.show');
+
+// Cart
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('/add/{id}', [CartController::class, 'store'])->name('add');
+    Route::get('/remove/{id}', [CartController::class, 'remove'])->name('remove');
+});
+
+// Wishlist
 
 // Backend
 
