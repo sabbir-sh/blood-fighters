@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\DonorController;
 use App\Http\Controllers\Backend\FaqController;
 use App\Http\Controllers\Backend\PaymentController;
+use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Frontend\PaymentsController;
 use App\Http\Controllers\Frontend\AboutUsController;
 use App\Http\Controllers\Frontend\CategoryListController;
@@ -140,7 +141,15 @@ Route::prefix('admin/payment')->name('payment.')->group(function () {
 });
 
 
-
+Route::prefix('admin/product')->name('product.')->group(function () {
+    Route::get('/', [ProductController::class, 'index'])->name('list');
+    Route::get('datatable', [ProductController::class, 'getDataTable'])->name('datatable');
+    Route::get('create', [ProductController::class, 'create'])->name('create');
+    Route::post('store', [ProductController::class, 'store'])->name('store');
+    Route::get('edit/{id}', [ProductController::class, 'edit'])->name('edit');
+    Route::patch('update/{id}', [ProductController::class, 'update'])->name('update');
+    Route::delete('delete/{id}', [ProductController::class, 'destroy'])->name('destroy');
+});
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])

@@ -252,6 +252,23 @@
         <ul class="nav flex-column" id="menuList">
 
 
+            <div class="menu-label">Product Management</div>
+            <li class="nav-item">
+                <a class="nav-link justify-content-between {{ request()->routeIs('product.*') ? 'active' : '' }}" 
+                   data-bs-toggle="collapse" href="#productCollapse">
+                    <div class="d-flex align-items-center gap-2">
+                       <i class="bi bi-stack"></i> Product Operations
+                    </div>
+                    <i class="bi bi-chevron-down opacity-50 small"></i>
+                </a>
+                <div class="collapse {{ request()->routeIs('product.*') ? 'show' : '' }}" id="productCollapse">
+                    <div class="submenu-container">
+                        <a href="{{ route('product.list') }}" class="nav-link {{ request()->routeIs('product.*') ? 'active' : '' }}">Products</a>
+                        {{-- <a href="{{ route('category.list') }}" class="nav-link {{ request()->routeIs('category.*') ? 'active' : '' }}">Categories</a> --}}
+                    </div>
+                </div>
+            </li>
+
             <div class="menu-label">Blood Management</div>
             <li class="nav-item">
                 <a class="nav-link justify-content-between {{ request()->routeIs('blood-group.*') || request()->routeIs('donor.*') ? 'active' : '' }}" 
