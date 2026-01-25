@@ -39,14 +39,14 @@
                     class="form-control">{{ old('description', $product->description ?? '') }}</textarea>
             </div>
 
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label>Slug</label>
                 <input type="text" id="slug" name="slug" value="{{ old('slug', $product->slug ?? '') }}"
                     class="form-control" required>
                 <small class="text-muted">
                     Auto generated from name, but you can edit it
                 </small>
-            </div>
+            </div> --}}
 
             <div class="mb-3">
                 <label>Price</label>

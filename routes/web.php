@@ -20,6 +20,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\DonorRegistationController;
 use App\Http\Controllers\Frontend\ProductsController;
 use App\Http\Controllers\Frontend\WishlistController;
@@ -64,9 +65,14 @@ Route::get('/product/{slug}', [ProductsController::class, 'show'])
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('/add/{id}', [CartController::class, 'store'])->name('add');
+    Route::post('/update/{id}', [CartController::class, 'update'])->name('update');
     Route::get('/remove/{id}', [CartController::class, 'remove'])->name('remove');
 });
 
+// Checkout
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])
+    ->name('checkout.place');
 // Wishlist
 
 // Backend
