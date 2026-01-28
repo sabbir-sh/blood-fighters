@@ -24,8 +24,16 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        $setting = Setting::first(); 
+        $setting = Setting::first();
         View::share('setting', $setting);
+
+        View::composer('*', function ($view) {
+            $cart = session()->get('cart', []);
+
+            // Total Quantity Count
+            $cartCount = array_sum(array_column($cart, 'qty'));
+
+            $view->with('cartCount', $cartCount);
+        });
     }
 }
-

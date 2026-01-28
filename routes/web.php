@@ -55,11 +55,8 @@ Route::get('/help-for-donate', [PaymentsController::class, 'index'])->name('dono
 Route::post('/help-for-donate/store', [PaymentsController::class, 'store'])->name('donor.donation.store');
 
 // Products
-Route::get('/product', [ProductsController::class, 'index'])
-    ->name('product.front.index');
-
-Route::get('/product/{slug}', [ProductsController::class, 'show'])
-    ->name('product.front.show');
+Route::get('/product', [ProductsController::class, 'index'])->name('product.front.index');
+Route::get('/product/{slug}', [ProductsController::class, 'show'])->name('product.front.show');
 
 // Cart
 Route::prefix('cart')->name('cart.')->group(function () {

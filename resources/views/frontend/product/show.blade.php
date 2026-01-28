@@ -1,195 +1,157 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-    <style>
-        .product-img-main {
-            transition: transform 0.3s ease;
-            cursor: zoom-in;
-        }
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb bg-transparent p-0 small" style="letter-spacing: 0.5px;">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('product.front.index') }}" class="text-decoration-none text-muted">Shop</a></li>
+            <li class="breadcrumb-item active fw-bold text-dark">{{ Str::limit($product->name, 25) }}</li>
+        </ol>
+    </nav>
 
-        .product-img-main:hover {
-            transform: scale(1.02);
-        }
-
-        .thumb-img {
-            cursor: pointer;
-            transition: 0.2s;
-            border: 2px solid transparent;
-            object-fit: cover;
-        }
-
-        .thumb-img:hover {
-            border-color: #ff3366;
-        }
-
-        /* Buttons */
-        .btn-cart {
-            background-color: #212529;
-            color: white;
-            border: none;
-            transition: 0.3s;
-            border-radius: 10px;
-        }
-
-        .btn-cart:hover {
-            background-color: #000;
-            color: white;
-        }
-
-        .btn-checkout {
-            background-color: #ff3366;
-            color: white;
-            border: none;
-            transition: 0.3s;
-            border-radius: 10px;
-        }
-
-        .btn-checkout:hover {
-            background-color: #e62e5c;
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3);
-        }
-
-        .quantity-input {
-            max-width: 120px;
-            border-radius: 10px;
-            height: 50px;
-            font-weight: bold;
-        }
-    </style>
-
-    <div class="container py-5">
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb small">
-                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
-                <li class="breadcrumb-item active text-dark" aria-current="page">Product Details</li>
-            </ol>
-        </nav>
-
-        <div class="row g-lg-5">
-            {{-- Left Column: Images --}}
-            <div class="col-md-6 mb-4">
-                <div class="position-sticky" style="top: 20px;">
-                    <div class="bg-white border rounded-4 overflow-hidden mb-3 shadow-sm">
-                        <img src="{{ asset('storage/' . $product->thumbnail) }}" id="mainImage"
-                            class="img-fluid product-img-main w-100" alt="{{ $product->name }}">
-                    </div>
-
-                    @if($product->images)
-                        <div class="d-flex gap-2 overflow-auto pb-2">
-                            <img src="{{ asset('storage/' . $product->thumbnail) }}" class="thumb-img rounded-3 border"
-                                width="75" height="75" onclick="changeImage(this.src)">
-                            @foreach($product->images as $img)
-                                <img src="{{ asset('storage/' . $img) }}" class="thumb-img rounded-3 border" width="75" height="75"
-                                    onclick="changeImage(this.src)">
-                            @endforeach
-                        </div>
-                    @endif
+    <div class="row g-4">
+        {{-- Left: Image Gallery (Medium Size) --}}
+        <div class="col-lg-6 col-md-12">
+            <div style="background: #fff; border-radius: 16px; border: 1px solid #f0f0f0; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03);">
+                <div style="position: relative; aspect-ratio: 1/1; display: flex; align-items: center; overflow: hidden; background: #fff;">
+                    <img src="{{ asset('storage/' . $product->thumbnail) }}" id="mainImage"
+                         style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.4s ease;" 
+                         alt="{{ $product->name }}">
                 </div>
             </div>
+            
+            @if($product->images)
+            <div style="display: flex; gap: 10px; margin-top: 15px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none;">
+                <img src="{{ asset('storage/' . $product->thumbnail) }}" 
+                     class="thumb-item" 
+                     style="width: 70px; height: 70px; border-radius: 10px; cursor: pointer; border: 2px solid #ff3366; object-fit: cover; flex-shrink: 0;"
+                     onclick="updateGallery(this, this.src)">
+                @foreach($product->images as $img)
+                    <img src="{{ asset('storage/' . $img) }}" 
+                         class="thumb-item" 
+                         style="width: 70px; height: 70px; border-radius: 10px; cursor: pointer; border: 2px solid #eee; object-fit: cover; flex-shrink: 0; transition: 0.3s;"
+                         onclick="updateGallery(this, this.src)">
+                @endforeach
+            </div>
+            @endif
+        </div>
 
-            {{-- Right Column: Product Info --}}
-            <div class="col-md-6">
-                <div class="ps-lg-4">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <span class="badge bg-danger px-3 py-2">Flash Sale</span>
-                        @if($product->stock > 0)
-                            <span class="text-success small fw-bold"><i class="fas fa-circle" style="font-size: 8px;"></i> In
-                                Stock</span>
-                        @else
-                            <span class="text-danger small fw-bold"><i class="fas fa-circle" style="font-size: 8px;"></i> Out of
-                                Stock</span>
-                        @endif
+        {{-- Right: Product Details --}}
+        <div class="col-lg-6 col-md-12">
+            <div style="padding: 5px 0;">
+                <div class="mb-2">
+                    <span style="font-size: 11px; background: #212529; color: #fff; padding: 4px 12px; border-radius: 4px; font-weight: 600; text-transform: uppercase;">
+                        Premium Quality
+                    </span>
+                </div>
+
+                <h1 style="font-size: 1.75rem; font-weight: 700; color: #111; margin-bottom: 12px; line-height: 1.3;">
+                    {{ $product->name }}
+                </h1>
+                
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div style="color: #ffc107; font-size: 14px;">
+                        @for($i=1; $i<=5; $i++) <i class="fas fa-star"></i> @endfor
+                        <span class="text-muted ms-1" style="font-size: 13px;">(4.8)</span>
                     </div>
+                    <div style="height: 15px; width: 1px; background: #ddd;"></div>
+                    <span style="font-size: 13px; font-weight: 600; color: {{ $product->stock > 0 ? '#28a745' : '#dc3545' }}">
+                        {{ $product->stock > 0 ? 'Available in Stock' : 'Out of Stock' }}
+                    </span>
+                </div>
 
-                    <h1 class="fw-bold h2 mb-3">{{ $product->name }}</h1>
-
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="text-warning me-2">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                <div style="margin-bottom: 25px;">
+                    @if($product->discount_price)
+                        <div class="d-flex align-items-baseline gap-2">
+                            <span style="font-size: 1.8rem; font-weight: 800; color: #ff3366;">৳{{ $product->discount_price }}</span>
+                            <span style="text-decoration: line-through; color: #adb5bd; font-size: 1.1rem;">৳{{ $product->price }}</span>
                         </div>
-                        <span class="text-muted small">(4.9/5 Based on 48 Reviews)</span>
-                    </div>
+                        <div style="color: #ff3366; font-size: 13px; font-weight: 600;">Save ৳{{ $product->price - $product->discount_price }} today</div>
+                    @else
+                        <span style="font-size: 1.8rem; font-weight: 800; color: #111;">৳{{ $product->price }}</span>
+                    @endif
+                </div>
 
-                    <div class="mb-4 bg-light p-3 rounded-3 border-start border-4 border-danger">
-                        @if($product->discount_price)
-                            <div class="d-flex align-items-baseline gap-2">
-                                <h2 class="fw-bold mb-0" style="color:#ff3366;">৳{{ $product->discount_price }}</h2>
-                                <span class="text-muted text-decoration-line-through fs-5">৳{{ $product->price }}</span>
-                            </div>
-                            <p class="text-danger small mb-0 fw-bold">You Save:
-                                ৳{{ $product->price - $product->discount_price }}</p>
-                        @else
-                            <h2 class="fw-bold mb-0">৳{{ $product->price }}</h2>
-                        @endif
-                    </div>
+                <div style="font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 25px; border-top: 1px solid #eee; pt-3;">
+                    <div class="pt-3 fw-bold text-dark mb-1">Quick Description:</div>
+                    {{ $product->description ?? 'Experience the perfect balance of comfort and style with our ' . $product->name . '. Designed for the modern lifestyle.' }}
+                </div>
 
-                    <p class="text-secondary mb-4">
-                        {{ $product->description ?? 'Experience superior quality and design with our latest ' . $product->name . '. Perfect for everyday use with premium materials.' }}
-                    </p>
-
-                    <form action="{{ route('cart.add', $product->id) }}" method="POST">
-                        @csrf
-
-                        {{-- Quantity Input --}}
-                        <div class="mb-4">
-                            <label class="form-label fw-bold small">SELECT QUANTITY</label>
-                            <input type="number" name="qty" value="1" min="1"
-                                class="form-control quantity-input text-center shadow-sm border-2">
-                        </div>
-
-                        <div class="row g-3">
-                            {{-- Add to Cart Button --}}
-                            <div class="col-sm-6">
-                                <button type="submit" name="action" value="add_to_cart"
-                                    class="btn btn-cart w-100 py-3 fw-bold hstack justify-content-center">
-                                    <i class="fas fa-cart-plus me-2"></i> ADD TO CART
-                                </button>
-                            </div>
-
-                            {{-- Direct Checkout Button --}}
-                            <div class="col-sm-6">
-                                <button type="submit" name="action" value="buy_now"
-                                    class="btn btn-checkout w-100 py-3 fw-bold hstack justify-content-center text-white">
-                                    <i class="fas fa-bolt me-2"></i> CHECKOUT NOW
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
-                    {{-- Feature Icons --}}
-                    <div class="mt-5 border-top pt-4">
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="bg-white shadow-sm border rounded p-2 text-primary">
-                                        <i class="fas fa-shipping-fast"></i>
-                                    </div>
-                                    <span class="small fw-medium">Fast Shipping</span>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="bg-white shadow-sm border rounded p-2 text-primary">
-                                        <i class="fas fa-headset"></i>
-                                    </div>
-                                    <span class="small fw-medium">24/7 Support</span>
-                                </div>
-                            </div>
+                <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                    @csrf
+                    
+                    {{-- Quantity Selector --}}
+                    <div class="mb-4">
+                        <label style="font-size: 12px; font-weight: 700; color: #333; margin-bottom: 8px; display: block;">Select Quantity</label>
+                        <div style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 10px; width: fit-content; background: #fdfdfd; padding: 4px;">
+                            <button type="button" onclick="updateQty(-1)" style="width: 35px; height: 35px; border: none; background: transparent; font-size: 18px; color: #666;">-</button>
+                            <input type="number" name="qty" id="product-qty" value="1" min="1" readonly style="width: 50px; border: none; text-align: center; font-weight: 700; background: transparent;">
+                            <button type="button" onclick="updateQty(1)" style="width: 35px; height: 35px; border: none; background: transparent; font-size: 18px; color: #666;">+</button>
                         </div>
                     </div>
 
+                    {{-- Action Buttons --}}
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <button type="submit" name="action" value="add_to_cart" 
+                                    style="height: 52px; border-radius: 12px; font-weight: 700; border: 2px solid #111; background: transparent; transition: 0.3s; width: 100%;">
+                                <i class="fas fa-shopping-cart me-2"></i> ADD TO CART
+                            </button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="submit" name="action" value="buy_now" 
+                                    style="height: 52px; border-radius: 12px; font-weight: 700; border: none; background: #ff3366; color: #fff; width: 100%; transition: 0.3s; box-shadow: 0 4px 12px rgba(255, 51, 102, 0.25);">
+                                <i class="fas fa-bolt me-2"></i> ORDER NOW
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                {{-- Trust Features --}}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-top: 1px solid #eee; padding-top: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background: #f8f9fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ff3366;">
+                            <i class="fas fa-truck" style="font-size: 16px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; font-weight: 700; color: #111;">Free Shipping</div>
+                            <div style="font-size: 11px; color: #777;">On orders over ৳5000</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background: #f8f9fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #28a745;">
+                            <i class="fas fa-undo" style="font-size: 16px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; font-weight: 700; color: #111;">Easy Returns</div>
+                            <div style="font-size: 11px; color: #777;">7 days return policy</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('scripts')
-    <script>
-        function changeImage(src) {
-            document.getElementById('mainImage').src = src;
-        }
-    </script>
+<script>
+    function updateGallery(element, src) {
+        document.getElementById('mainImage').src = src;
+        // Thumbnail border reset
+        document.querySelectorAll('.thumb-item').forEach(img => {
+            img.style.borderColor = '#eee';
+        });
+        // Active border
+        element.style.borderColor = '#ff3366';
+    }
+
+    function updateQty(val) {
+        const input = document.getElementById('product-qty');
+        let newVal = parseInt(input.value) + val;
+        if(newVal < 1) newVal = 1;
+        input.value = newVal;
+    }
+</script>
 @endpush

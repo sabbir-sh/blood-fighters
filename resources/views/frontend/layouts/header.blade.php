@@ -46,6 +46,25 @@
                         <i class="bi bi-droplet-fill me-2"></i>দাতা হন
                     </a>
                 </li>
+                {{-- CART ICON --}}
+<li class="nav-item ms-lg-3 position-relative">
+    <a class="nav-link cart-btn" href="{{ route('cart.index') }}">
+        <i class="bi bi-cart3 fs-4"></i>
+
+        {{-- Cart Count Badge --}}
+        @php
+            $cart = session()->get('cart', []);
+            $count = array_sum(array_column($cart, 'qty'));
+        @endphp
+
+        @if($count > 0)
+            <span class="cart-badge">
+                {{ $count }}
+            </span>
+        @endif
+    </a>
+</li>
+
             </ul>
         </div>
     </div>
