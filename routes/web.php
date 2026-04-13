@@ -70,6 +70,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])
     ->name('checkout.place');
+    Route::get('/checkout/success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
 // Wishlist
 
 // Backend

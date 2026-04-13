@@ -1,179 +1,106 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-2">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="/">
-            @if($setting?->logo)
-                <img src="{{ $setting->logo_url }}" alt="Logo" height="50" class="d-inline-block">
-            @else
-                <div class="brand-container">
-                   <span style="font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; justify-content: center;">
+<nav class="sticky top-0 z-[1050] bg-white border-b border-gray-100 shadow-sm py-3 transition-all">
+    <div class="container mx-auto px-4 md:px-6">
+        <div class="flex items-center justify-between">
+            
+            <a class="flex items-center no-underline group" href="/">
+                @if($setting?->logo)
+                    <img src="{{ $setting->logo_url }}" alt="Logo" class="h-12 w-auto object-contain">
+                @else
+                    <div class="flex items-center font-black tracking-tight leading-none">
                         @if(isset($setting->site_name))
-                            {{ $setting->site_name }}
+                            <span class="text-2xl text-red-600">{{ $setting->site_name }}</span>
                         @else
-                            <span class="brand-main">BLOOD</span><span class="brand-sub">FIGHTERS Foundation</span>
+                            <span class="text-2xl text-red-600">BLOOD</span>
+                            <span class="text-2xl text-gray-900 ml-1.5 font-light">FIGHTERS</span>
                         @endif
-                    </span>
-                    {{-- <span class="brand-main">BLOOD</span><span class="brand-sub">FIGHTERS Foundation</span> --}}
-                </div>
-            @endif
-        </a>
+                    </div>
+                @endif
+            </a>
 
-        <button class="navbar-toggler collapsed d-flex d-lg-none flex-column justify-content-around" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="toggler-icon top-bar"></span>
-            <span class="toggler-icon middle-bar"></span>
-            <span class="toggler-icon bottom-bar"></span>
-        </button>
+            <button class="lg:hidden text-gray-500 focus:outline-none">
+                <i class="bi bi-list text-3xl"></i>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/">হোম</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('blog*') ? 'active' : '' }}" href="/blog">ব্লগ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('about-us') ? 'active' : '' }}" href="/about-us">আমাদের সম্পর্কে</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('contact-us') ? 'active' : '' }}" href="/contact-us">যোগাযোগ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->is('product') ? 'active' : '' }}" href="/product">পণ্য</a>
-                </li>
+            <div class="hidden lg:flex items-center space-x-2">
+                @php 
+                    $navLinkClass = "text-[15px] font-bold px-4 py-2 rounded-xl transition-all duration-300";
+                    $activeClass = "text-red-600 bg-red-50";
+                    $inactiveClass = "text-gray-600 hover:text-red-600 hover:bg-gray-50";
+                @endphp
 
-                <li class="nav-item ms-lg-4 mt-3 mt-lg-0">
-                    <a class="btn-fighter" href="/be-a-fighter-register">
-                        <i class="bi bi-droplet-fill me-2"></i>দাতা হন
+                <a href="/" class="{{ $navLinkClass }} {{ request()->is('/') ? $activeClass : $inactiveClass }}">হোম</a>
+                <a href="/blog" class="{{ $navLinkClass }} {{ request()->is('blog*') ? $activeClass : $inactiveClass }}">ব্লগ</a>
+                <a href="/about-us" class="{{ $navLinkClass }} {{ request()->is('about-us') ? $activeClass : $inactiveClass }}">আমাদের সম্পর্কে</a>
+                <a href="/contact-us" class="{{ $navLinkClass }} {{ request()->is('contact-us') ? $activeClass : $inactiveClass }}">যোগাযোগ</a>
+                <a href="/product" class="{{ $navLinkClass }} {{ request()->is('product') ? $activeClass : $inactiveClass }}">পণ্য</a>
+
+                <div class="pl-4">
+                    <a href="/be-a-fighter-register" 
+                       class="flex items-center px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-full font-extrabold text-sm shadow-lg shadow-red-200 hover:shadow-red-300 hover:scale-[1.02] active:scale-[0.98] transition-all no-underline">
+                        <i class="bi bi-droplet-fill mr-2"></i> দাতা হন
                     </a>
-                </li>
-                {{-- CART ICON --}}
-<li class="nav-item ms-lg-3 position-relative">
-    <a class="nav-link cart-btn" href="{{ route('cart.index') }}">
-        <i class="bi bi-cart3 fs-4"></i>
+                </div>
 
-        {{-- Cart Count Badge --}}
-        @php
-            $cart = session()->get('cart', []);
-            $count = array_sum(array_column($cart, 'qty'));
-        @endphp
+                <div class="relative group ml-4">
+                    <a href="{{ route('cart.index') }}" class="relative block p-2.5 text-gray-800 hover:bg-gray-50 rounded-full transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cart-count" class="absolute -top-0.5 -right-0.5 bg-red-600 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+                            {{ count(session('cart', [])) }}
+                        </span>
+                    </a>
 
-        @if($count > 0)
-            <span class="cart-badge">
-                {{ $count }}
-            </span>
-        @endif
-    </a>
-</li>
-
-            </ul>
+                    <div class="absolute right-0 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-[1100]">
+                        <div class="w-[320px] bg-white rounded-[28px] shadow-2xl border border-gray-100 p-6">
+                            @if(session('cart') && count(session('cart')) > 0)
+                                <div class="max-h-[300px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+                                    @php $subtotal = 0; @endphp
+                                    @foreach(session('cart') as $id => $details)
+                                        @php $subtotal += $details['price'] * $details['qty'] @endphp
+                                        <div class="flex items-center gap-4 pb-4 border-b border-gray-50 last:border-0 group/item">
+                                            <div class="h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100">
+                                                <img src="{{ asset('storage/' . $details['image']) }}" class="h-full w-full object-cover">
+                                            </div>
+                                            <div class="flex-grow">
+                                                <h6 class="text-sm font-bold text-gray-900 truncate w-32 mb-0.5">{{ $details['name'] }}</h6>
+                                                <span class="text-xs font-semibold text-gray-400">{{ $details['qty'] }} × ৳{{ number_format($details['price']) }}</span>
+                                            </div>
+                                            <a href="{{ route('cart.remove', $id) }}" class="text-gray-300 hover:text-red-500 transition-colors">
+                                                <i class="fas fa-times-circle"></i>
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                
+                                <div class="mt-6 pt-5 border-t border-gray-100">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Subtotal</span>
+                                        <span class="text-xl font-black text-gray-900">৳{{ number_format($subtotal) }}</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <a href="{{ route('cart.index') }}" class="text-center py-3 bg-gray-50 text-gray-900 text-[13px] font-bold rounded-xl hover:bg-gray-100 transition-all no-underline border border-gray-100">View Cart</a>
+                                        <a href="{{ route('checkout.index') }}" class="text-center py-3 bg-gray-900 text-white text-[13px] font-bold rounded-xl hover:bg-black shadow-lg transition-all no-underline">Checkout</a>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="text-center py-10">
+                                    <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i class="fas fa-shopping-basket text-gray-200 text-2xl"></i>
+                                    </div>
+                                    <p class="text-sm font-bold text-gray-400 m-0">Your cart is empty</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </nav>
 
 <style>
-/* --- ব্র্যান্ড ডিজাইন --- */
-.brand-main {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: #dc3545; /* Blood Red */
-    letter-spacing: -1px;
-}
-.brand-sub {
-    font-size: 1.8rem;
-    font-weight: 400;
-    color: #212529;
-    letter-spacing: -1px;
-}
-
-/* --- নেভিগেশন লিংকস --- */
-.navbar-nav .nav-link {
-    color: #444 !important;
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 10px 18px !important;
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-.navbar-nav .nav-link:hover, 
-.navbar-nav .nav-link.active {
-    color: #dc3545 !important;
-}
-
-/* হোভার আন্ডারলাইন এনিমেশন */
-.navbar-nav .nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    left: 18px;
-    width: 0;
-    height: 3px;
-    background: #dc3545;
-    transition: width 0.3s ease;
-    border-radius: 10px;
-}
-
-.navbar-nav .nav-link:hover::before,
-.navbar-nav .nav-link.active::before {
-    width: 30px;
-}
-
-/* --- দাতা হন বাটন (Premium Fighter Button) --- */
-.btn-fighter {
-    background: linear-gradient(45deg, #dc3545, #ff4d4d);
-    color: white !important;
-    padding: 12px 28px;
-    border-radius: 50px;
-    font-weight: 700;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.btn-fighter:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
-    color: white !important;
-}
-
-/* --- মোবাইল মেনু টগলার এনিমেশন --- */
-.toggler-icon {
-    width: 25px;
-    height: 3px;
-    background-color: #dc3545;
-    display: block;
-    transition: all 0.3s ease-in-out;
-}
-.navbar-toggler {
-    height: 20px;
-    padding: 0;
-}
-.navbar-toggler:not(.collapsed) .top-bar { transform: rotate(45deg) translate(5px, 5px); }
-.navbar-toggler:not(.collapsed) .middle-bar { opacity: 0; }
-.navbar-toggler:not(.collapsed) .bottom-bar { transform: rotate(-45deg) translate(7px, -7px); }
-
-/* --- রেসপন্সিভ মোবাইল ভিউ --- */
-@media (max-width: 991px) {
-    .navbar-collapse {
-        background: #fff;
-        margin-top: 15px;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-    .navbar-nav .nav-link::before { display: none; }
-    .navbar-nav .nav-link {
-        padding: 12px 0 !important;
-        border-bottom: 1px solid #f8f9fa;
-        width: 100%;
-    }
-    .btn-fighter {
-        width: 100%;
-        justify-content: center;
-        margin-top: 10px;
-    }
-}
+    /* Custom Scrollbar for mini cart */
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #fee2e2; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #ef4444; }
 </style>
